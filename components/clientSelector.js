@@ -4,7 +4,7 @@ import makeAnimated from "react-select/animated";
 import { useEffect, useState } from "react";
 import {  warningToast } from './utils/notification';
 import 'react-toastify/dist/ReactToastify.css';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 
 export default function ClientSelector({getReportData}){
     
@@ -19,6 +19,7 @@ export default function ClientSelector({getReportData}){
     ];
 
     var clientData = {};
+    const router = useRouter();
     const queryData = router.query;
 
     if(queryData.clientId){
