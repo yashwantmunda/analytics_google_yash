@@ -1,15 +1,39 @@
 import { useEffect, useState } from 'react';
 import { successToast, warningToast, errorToast } from './utils/notification';
-import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 import { ErrorBoundary } from 'react-error-boundary';
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
 export default function AddCompany() {
+
+  const typeList = [
+    { value: 'ecommerce', label: 'Ecommerce' },
+    { value: 'non-ecommerce', label: 'Non-Ecommerce' },
+  ];
 
 const [company, setCompany] = useState([]);
 
 const router = useRouter();
+const [clientType, setClientType] = useState('');
+
+const customStyles = {
+  placeholder: (styles) => {
+      return {
+          ...styles,
+          color: "#000000",
+      }
+  },
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+      // const color = chroma(data.color);
+      //console.log({ data, isDisabled, isFocused, isSelected });
+      return {
+          ...styles,
+          backgroundColor: isFocused ? "#eaecf4" : null,
+          color: "#000000"
+      };
+  }
+};
 
   useEffect(() => {
     let authToken = localStorage.getItem('token');
@@ -43,13 +67,14 @@ const router = useRouter();
     let authToken = localStorage.getItem('token');
     let newClient = {
         clientName: clientName,
-        clientId: clientId
+        clientId: clientId,
+        clientType:clientType
     };
 
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x_auth_token': authToken },
-      body: JSON.stringify({ clientName: clientName, clientId: clientId})
+      body: JSON.stringify({ clientName: clientName, clientId: clientId,clientType:clientType})
     };
 
     fetch('/api/addClient', requestOptions)
@@ -86,14 +111,51 @@ const router = useRouter();
 
   }
 
+  const handleClientdelete = (id, clientName) => {
+    let authToken = localStorage.getItem('token');
+    let newClient = {
+        clientName: clientName,
+        clientId: id
+    };
 
-  const handleClientRoute = (label, id) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x_auth_token': authToken },
+      body: JSON.stringify({ clientName: clientName, clientId: id})
+    };
+
+    fetch('/api/deleteClient', requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      if(data.status === "Error"){
+        localStorage.clear();
+        router.push('/login');
+        return;
+      }
+      let updatedCompany =  company.filter(item =>  item._id !== id);
+      setCompany([...updatedCompany]);
+      successToast('Client removed successfully');
+    })
+    .catch(error => {
+    
+      errorToast('Error deleting client 😱');
+    
+    })
+  }
+
+  const handleTypeSelection = (selectedType) => {
+      setClientType(selectedType.value);
+  }
+
+
+  const handleClientRoute = (label, id, type) => {
     router.push(
       {
         pathname: '/',
         query: {
           clientLabel: label,
-          clientId: id
+          clientId: id,
+          clientType:type
         }
       }
     );
@@ -105,16 +167,31 @@ const router = useRouter();
       <h1 className="h3 mb-3 text-gray-800">Add New Client</h1>
       <div className="d-flex shadow mb-4 py-4 pl-2 pr-2">
         <form className="d-flex w-100">
-          <div className="col-xl-3 col-md-6 position-relative">
+          <div className="col-xl-3 col-md-3 position-relative">
               <input type="text" name="company" className="form-control" id="companyname" placeholder="Client Name" />
               <span className="field-error invalid-feedback" id="all-fields"></span>
           </div>
-          <div className="col-xl-3 col-md-6">
+          <div className="col-xl-3 col-md-3">
               <input type="text" name="clientId" className="form-control" id="viewid" placeholder="Google Analytics View Id" />
           </div>
-          <div className="col-xl-3 col-md-6">
+          <div className="col-xl-3 col-md-3">
+          <div className="w-100">
+              <Select 
+                  name="clientType" 
+                  components={makeAnimated} 
+                  id="industry-type" 
+                  instanceId="industry-type" 
+                  options={typeList}
+                  placeholder="Industry type"
+                  onChange={handleTypeSelection}
+                  styles={customStyles}
+                    />
+          </div>
+          </div>
+          <div className="col-xl-3 col-md-3">
               <button type="submit" className="btn btn-primary" onClick={handleCompanyAddition}>Save</button>
           </div>
+      
         </form>
       </div>
 
@@ -141,8 +218,8 @@ const router = useRouter();
                       <td>{client.clientName}</td>
                       <td>{client.clientId}</td>
                       <td>
-                        <button title="View Client Report" type="button" className="btn btn-info btn-sm mr-2" onClick={() => handleClientRoute(client.clientName,client.clientId)}><i className="fas faw fa-eye"></i></button>
-                        <button title="Delete Client" type="button" className="btn btn-warning btn-sm"><i className="fas faw fa-trash"></i></button>
+                        <button title="View Client Report" type="button" className="btn btn-info btn-sm mr-2" onClick={() => handleClientRoute(client.clientName,client.clientId,client.clientType)}><i className="fas faw fa-eye"></i></button>
+                        <button title="Delete Client" type="button" className="btn btn-warning btn-sm" onClick={() => handleClientdelete(client._id,client.clientName)} ><i className="fas faw fa-trash"></i></button>
                       </td>
                     </tr>
                   ))

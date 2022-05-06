@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-export default function Reports({reportData,client}){
+export default function Reports({reportData,client,durationData}){
 
-	console.log('gaData',reportData);
+	// console.log('gaData',reportData);
 	//if (typeof window !== "undefined") {
 		//tableToCSV();
-		function tableToCSV() {
+		function tableToCSV(client) {
 			//e.preventDefault();
 		    var csv_data = [];
 		 
@@ -46,7 +46,7 @@ export default function Reports({reportData,client}){
 		    var temp_link = document.createElement('a');
 		 
 		    // Download csv file
-		    temp_link.download = "Analytics.csv";
+		    temp_link.download = `analytics_${client}.csv`;
 		    var url = window.URL.createObjectURL(CSVFile);
 		    temp_link.href = url;
 		 
@@ -70,9 +70,9 @@ export default function Reports({reportData,client}){
 		
 		<>
 			<div className="d-sm-flex align-items-center justify-content-between mb-4">
-              	<h1 className="h3 mb-0 text-gray-800">Audit Report of {client} for previous</h1>
+              	<h1 className="h3 mb-0 text-gray-800">Audit report of {client} for previous {durationData}</h1>
               	<div>
-              		<button className="btn btn-md btn-warning m-1" onClick={tableToCSV}>Export as CSV
+              		<button className="btn btn-md btn-warning m-1" onClick={() => tableToCSV(client)}>Export as CSV
               		</button>
               	</div>
             </div>

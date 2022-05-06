@@ -5,7 +5,7 @@ import ClientSelector from "../components/clientSelector";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from 'next/router';
+
 import Image from "next/image";
 
 
@@ -13,11 +13,10 @@ import Image from "next/image";
 
 export default function Reports(props) {
 
-  const router = useRouter();
+  
   const [loggedInUser, setLoggedInUser] = useState('');
   const [tokenCheck, setTokenCheck] = useState(false);
-  const clientData = router.query;
-
+  
   useEffect(() => {
     
     let token = localStorage.getItem('token');
@@ -31,7 +30,7 @@ export default function Reports(props) {
       setLoggedInUser(user);
       //setSelectedClient(clientData.clientLabel);
     }
-  },[router]);
+  },[]);
 
   // Pull report for a client
 
@@ -39,11 +38,12 @@ export default function Reports(props) {
   const [loading, setLoading] = useState(false);
   const [errorState, setErrorState] = useState(false);
   const [selectedClient, setSelectedClient] = useState('');
+  const [selectedDuration, setSelectedDuration] = useState('');
   
 
   const toastRef = useRef(null);
 
-  const getReport = (client, dateRange, viewId, type) => {
+  const getReport = (client, dateRange, viewId, type,durationLabel) => {
     let authToken = localStorage.getItem('token');
 
     const activeToast = () => toastRef.current = toast.loading("Fetching report...",{autoClose:false});
@@ -243,6 +243,7 @@ export default function Reports(props) {
         completingToast();
         setgaData([{...sessionObject},{...userObject},{...sameOsObject},{...visitorsObject},...filteredData]);
         setSelectedClient(client);
+        setSelectedDuration(durationLabel);
       }).catch(err => {
         console.log(err);
         setLoading(false);
@@ -273,14 +274,14 @@ export default function Reports(props) {
 
             <div className="container-fluid">
               {/* <button onClick={() => getReport('Gnome','180Days',3435,'Ecommerce')}>Get report</button> */}
-              <ClientSelector getReportData={getReport} queryClientData={clientData}/>
+              <ClientSelector getReportData={getReport}/>
               { gaData.length == 0 && !loading && !errorState ? 
               <div className="placeholderWrap">
                 <Image src="/images/data_extract.png" width={650} height={350} layout="fixed" alt="placehlder_img"/>
               </div>
               :null
               }
-              { loading ?  <h3 style={{display:"none"}}>Loading....</h3> : errorState ? <h3>Something went wrong. Please try again</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} /> : null
+              { loading ?  <h3 style={{display:"none"}}>Loading....</h3> : errorState ? <h3>Something went wrong. Please try again</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} durationData={selectedDuration} /> : null
               }
             </div>
           </div>
