@@ -12,7 +12,7 @@ export default function Sidebar(){
             <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
                 <Link className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                     <a>
-                        <div className="sidebar-brand-text mt-3 mb-2 mx-auto">
+                        <div className="sidebar-brand-text mt-3 mb-3 mx-auto">
                             <Image src="/images/sidebar_logo.png" width={200} height={30} alt="home"/>
                         </div>
                     </a>
@@ -27,18 +27,15 @@ export default function Sidebar(){
                             <span>Dashboard</span>
                         </a>
                     </Link>
-                </li>
+                </li>*/}
             
-                <hr className="mx-3"/>*/}
-
-                <div className="sidebar-heading mt-2">
-                    Menu
-                </div>
+                <hr className="sidebar-divider mx-3"/>
                 
                 <li className="nav-item">
                     <Link href="/addclient" className="nav-item">
                         <a className="nav-link text-white">
-                            <i className="fas fa-fw fa-building"></i>
+                            {/*<i className="fas fa-fw fa-building"></i>*/}
+                            <img src="/images/layer.png" alt="new client" />
                             <span>Add new client</span>
                         </a>
                     </Link>

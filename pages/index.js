@@ -254,19 +254,23 @@ export default function Reports(props) {
     // setgaData([...reportData]);
   }
 
-  
-
   return (
     <>
     {
       tokenCheck && 
       <main>
-      <ToastContainer />
+      {/*<ToastContainer />*/}
       <div id="wrapper">
         <Sidebar/>
         <div id="content-wrapper" className="d-flex flex-column">
-          <div id="content">
+          <div id="content" className="position-relaive">
             <Navbar user={loggedInUser}/>
+            { loading ?
+              <div className="slide-progress-bar">
+                <div className="progress-bar" id="progress-bar"></div>
+              </div> : null
+            }
+
             <div className="container-fluid">
               {/* <button onClick={() => getReport('Gnome','180Days',3435,'Ecommerce')}>Get report</button> */}
               <ClientSelector getReportData={getReport} queryClientData={clientData}/>
@@ -276,8 +280,8 @@ export default function Reports(props) {
               </div>
               :null
               }
-              { loading ?  <h3>Loading....</h3> : errorState ? <h3>Something went wrong. Please try again</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} /> : null}
- 
+              { loading ?  <h3 style={{display:"none"}}>Loading....</h3> : errorState ? <h3>Something went wrong. Please try again</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} /> : null
+              }
             </div>
           </div>
         </div>

@@ -62,13 +62,17 @@ export default function ClientSelector({getReportData,queryClientData}){
         setClientType(selectedType.value);
     }
 
-    const handleFetchReport = () => {
-        if(client.trim() === '' || duration.trim() === '' || clientType.trim() === ''){
-            warningToast('Please select all the fields 🎃');
+    const handleFetchReport = (e) => {
+        e.preventDefault();
+        if(client === undefined || client.trim() === '' || duration.trim() === '' || clientType.trim() === ''){
+            // warningToast('Please select all the fields 🎃');
+            document.getElementById('all-fields').textContent='Please select all the fields';
+            document.getElementById('all-fields').style.display='block';
             return;
         }
-
-         getReportData(clientName,duration,client,clientType);
+        document.getElementById('all-fields').textContent='';
+        document.getElementById('all-fields').style.display='none';
+        getReportData(clientName,duration,client,clientType);
     }
 
    
@@ -108,9 +112,9 @@ export default function ClientSelector({getReportData,queryClientData}){
     return(
         <>
             <div className="row">
-                <form className="d-flex p-0" onSubmit={getReport}>    
-                    <div className="col-xl-3 col-md-6 mb-4">
-                        <div className="w-100">
+                <form className="d-flex p-0">    
+                    <div className="col-xl-3 col-md-6 mb-5">
+                        <div className="w-100 position-relative">
                             <Select 
                                 name="client" 
                                 components={makeAnimated} 
@@ -122,9 +126,10 @@ export default function ClientSelector({getReportData,queryClientData}){
                                 value={clientList.filter(item => item.value === queryClientData.clientId)}
                                 styles={customStyles}
                                  />
+                            <span className="field-error invalid-feedback" id="all-fields"></span>    
                         </div>
                     </div>
-                    <div className="col-xl-3 col-md-6 mb-4">
+                    <div className="col-xl-3 col-md-6 mb-5">
                         <div className="w-100">
                             <Select 
                                 name="duration" 
@@ -139,7 +144,7 @@ export default function ClientSelector({getReportData,queryClientData}){
                         </div>
                     </div>
 
-                    <div className="col-xl-3 col-md-6 mb-4">
+                    <div className="col-xl-3 col-md-6 mb-5">
                         <div className="w-100">
                             <Select 
                                 name="duration" 

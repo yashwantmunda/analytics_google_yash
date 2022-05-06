@@ -59,20 +59,21 @@ export default function Reports({reportData,client}){
 		    document.body.removeChild(temp_link);
 		}
 	//}
-		function excelData(){
-
-		}
 
 		// let gaData = [];
+	useEffect(()=>{
+		console.log(client);
+	}, [client])
+
+
 	return(
 		
 		<>
 			<div className="d-sm-flex align-items-center justify-content-between mb-4">
-              	<h1 className="h3 mb-0 text-gray-800">Google Analytics Report of {client}</h1>
+              	<h1 className="h3 mb-0 text-gray-800">Audit Report of {client} for previous</h1>
               	<div>
               		<button className="btn btn-md btn-warning m-1" onClick={tableToCSV}>Export as CSV
               		</button>
-              		<button className="btn btn-md btn-primary m-1" onClick={excelData}>Export as Excel</button>
               	</div>
             </div>
 			{

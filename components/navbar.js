@@ -42,10 +42,18 @@ export default function Navbar({user}){
 					            <a className="nav-link dropdown-toggle" id="userDropdown" role="button"
 					                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onClick={() => setIsActive(!isActive)}>
 					                <span className="d-none d-lg-inline text-gray-600 small">{user}</span>
-					                <i class="mr-2 fas fa-fw fa-angle-down"></i>
-					                <img className="img-profile rounded-circle" src="/images/undraw_profile.svg" />
+					                {
+					            		!isActive &&
+					                	<i className="mr-2 fas fa-fw fa-angle-down"></i>
+					            	}
+					                {
+					            		isActive &&
+					                	<i className="mr-2 fas fa-fw fa-angle-up"></i>
+					            	}
+					                <img className="img-profile rounded-circle" src="/images/logo@2x.png" />
 					            </a>
-					            {isActive &&
+					            {
+					            	isActive &&
 						            <div ref={dropdown} className="dropdown-menu dropdown-menu-right shadow animated--grow-in show"
 						                aria-labelledby="userDropdown">
 						                <Link href="#">

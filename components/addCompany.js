@@ -75,9 +75,13 @@ const router = useRouter();
    let company = document.getElementById('companyname').value;
    let clientId = document.getElementById('viewid').value;
    if(company.trim() === '' || clientId.trim() === ''){
-      warningToast('Please enter all the fields 🎃');
+      //warningToast('Please enter all the fields 🎃');
+      document.getElementById('all-fields').textContent='Please fill all the fields';
+      document.getElementById('all-fields').style.display='block';
       return;
    }
+   document.getElementById('all-fields').textContent='';
+  document.getElementById('all-fields').style.display='none';
    addClients(company, clientId);
 
   }
@@ -97,55 +101,58 @@ const router = useRouter();
 
   return (
     <>
-    <ToastContainer />
-      <h1 className="h3 mb-4 text-gray-800">Add Client</h1>
-      <div className="row">
-        <div className="col-md-6 col-xs-6">
-          <form>
-            <div className="mb-3">
-              <label htmlFor="companyname" className="form-label">Client Name</label>
-              <input type="text" name="company" className="form-control" id="companyname" aria-describedby="emailHelp" />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="viewid" className="form-label">Google Analytics View Id</label>
-              <input type="text" name="clientId" className="form-control" id="viewid" />
-            </div>
-            <button type="submit" className="btn btn-primary" onClick={handleCompanyAddition} >Save</button>
-          </form>
-        </div>
+    {/*<ToastContainer />*/}
+      <h1 className="h3 mb-3 text-gray-800">Add New Client</h1>
+      <div className="d-flex shadow mb-4 py-4 pl-2 pr-2">
+        <form className="d-flex w-100">
+          <div className="col-xl-3 col-md-6 position-relative">
+              <input type="text" name="company" className="form-control" id="companyname" placeholder="Client Name" />
+              <span className="field-error invalid-feedback" id="all-fields"></span>
+          </div>
+          <div className="col-xl-3 col-md-6">
+              <input type="text" name="clientId" className="form-control" id="viewid" placeholder="Google Analytics View Id" />
+          </div>
+          <div className="col-xl-3 col-md-6">
+              <button type="submit" className="btn btn-primary" onClick={handleCompanyAddition}>Save</button>
+          </div>
+        </form>
+      </div>
 
-        <div className='col-md-1 col-xs-1'></div>
+      <div className="mb-3 text-center or-divider"><span>Or</span></div>
+
+      <h1 className="h3 mb-3 text-gray-800">Select Client</h1>
+      <div className="d-flex shadow mb-4 p-4">
         <ErrorBoundary FallbackComponent={<>Error loading added client</>}>
         {
           company && company.length > 0 &&
-          <div className='col-md-4 col-xs-4'>
-            <h3>Added Clients</h3>
-            {
-              company.map((client, index) => (
-                <div className='row mb-2' key={index} onClick={() => handleClientRoute(client.clientName,client.clientId)}>
-                    <div className="card border-left-primary shadow h-100 py-2">
-                      <div className="card-body">
-                        <div className="row no-gutters align-items-center">
-                          <div className="col mr-2">
-                            <div className="text-md font-weight-bold text-primary text-uppercase mb-1">{client.clientName}</div>
-                            <div className="text-md font-weight-bold text-primary text-uppercase mb-1">Client ID - {client.clientId}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              ))
-               
-            }
-           
+          <div className="tableInnerWrapper table-responsive">
+            <table className="table table-bordered table-sm bg-white mb-0" >
+              <thead>
+                <tr>
+                  <th scope="col">Client Name</th>
+                  <th scope="col">Client Id</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  company.map((client, index) => (
+                    <tr key={index}>
+                      <td>{client.clientName}</td>
+                      <td>{client.clientId}</td>
+                      <td>
+                        <button title="View Client Report" type="button" className="btn btn-info btn-sm mr-2" onClick={() => handleClientRoute(client.clientName,client.clientId)}><i className="fas faw fa-eye"></i></button>
+                        <button title="Delete Client" type="button" className="btn btn-warning btn-sm"><i className="fas faw fa-trash"></i></button>
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
           </div>
         }
         </ErrorBoundary>
-        
-        
-
       </div>
-  
     </>
   );
 };
