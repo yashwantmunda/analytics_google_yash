@@ -5,7 +5,7 @@ import ClientSelector from "../components/clientSelector";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/router";
+import router from "next/router";
 import Image from "next/image";
 
 
@@ -13,7 +13,6 @@ import Image from "next/image";
 
 export default function Reports(props) {
 
-  const router = useRouter();
   const [loggedInUser, setLoggedInUser] = useState('');
   const [tokenCheck, setTokenCheck] = useState(false);
   
@@ -30,7 +29,7 @@ export default function Reports(props) {
       setLoggedInUser(user);
       //setSelectedClient(clientData.clientLabel);
     }
-  },[]);
+  },[router]);
 
   // Pull report for a client
 
