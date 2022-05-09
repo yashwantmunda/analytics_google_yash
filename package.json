@@ -21,6 +21,7 @@
     "react-dom": "17.0.2",
     "react-error-boundary": "^3.1.4",
     "react-select": "^5.3.0",
+    "react-shimmer-effects": "^1.0.2",
     "react-toastify": "^8.2.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.6/xlsx-0.18.6.tgz",
     "xlsx-style": "^0.8.13"

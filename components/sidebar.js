@@ -13,12 +13,12 @@ export default function Sidebar(){
                 <Link className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
                     <a>
                         <div className="sidebar-brand-text mt-3 mb-3 mx-auto">
-                            <Image src="/images/sidebar_logo.png" width={200} height={30} alt="home"/>
+                            <Image src="/images/logo.png" width={200} height={56} alt="home"/>
                         </div>
                     </a>
                 </Link>
                 
-                {/*<hr className="sidebar-divider my-0" />
+                <hr className="sidebar-divider my-0" />
                     
                 <li className={router.pathname == "/" ? "nav-item active" : "nav-item"}>
                     <Link href="/">
@@ -27,16 +27,16 @@ export default function Sidebar(){
                             <span>Dashboard</span>
                         </a>
                     </Link>
-                </li>*/}
+                </li>
             
-                <hr className="sidebar-divider mx-3"/>
+                {/*<hr className="sidebar-divider mx-3"/>*/}
                 
-                <li className="nav-item">
+                <li className={router.pathname == "/addclient" ? "nav-item active" : "nav-item"}>
                     <Link href="/addclient" className="nav-item">
-                        <a className="nav-link text-white">
+                        <a className="nav-link">
                             {/*<i className="fas fa-fw fa-building"></i>*/}
-                            <img src="/images/layer.png" alt="new client" />
-                            <span>Add new client</span>
+                            <img src="/images/layer.png" alt="Client" />
+                            <span>Client</span>
                         </a>
                     </Link>
                 </li>

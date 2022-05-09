@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useState, useRef, useEffect } from "react";
 import router from "next/router";
 import Image from "next/image";
-
+import { ShimmerTable } from "react-shimmer-effects";
 
 
 
@@ -15,6 +15,7 @@ export default function Reports(props) {
 
   const [loggedInUser, setLoggedInUser] = useState('');
   const [tokenCheck, setTokenCheck] = useState(false);
+  const progressRef = useRef(null);
   
   useEffect(() => {
     
@@ -44,7 +45,8 @@ export default function Reports(props) {
 
   const getReport = (client, dateRange, viewId, type,durationLabel) => {
     let authToken = localStorage.getItem('token');
-
+    // progressRef.current.classList.remove('complete');
+    // document.querySelector('.progress-bar').classList.remove('complete');
     const activeToast = () => toastRef.current = toast.loading("Fetching report...",{autoClose:false});
     activeToast();
     setLoading(true);
@@ -58,10 +60,13 @@ export default function Reports(props) {
       .then(response => response.json())
       .then(data => {
         if(data.status === "Error"){
-          localStorage.clear();
-          router.push('/login');
+          // localStorage.clear();
+          // router.push('/login');
+          setErrorState(true);
           return;
         }
+        progressRef.current.classList.add('complete');
+        // document.querySelector('.progress-bar').classList.add('complete');
         let updatingToast = () => toast.update(toastRef.current,{render :'Preparing report...', type: "info", isLoading: false, closeOnClick: true,progress: undefined,autoClose: false});
         updatingToast();
         let sessionObject = {};
@@ -244,6 +249,8 @@ export default function Reports(props) {
         setSelectedClient(client);
         setSelectedDuration(durationLabel);
       }).catch(err => {
+        progressRef.current.classList.remove('complete');
+        //document.querySelector('.progress-bar').classList.remove('complete');
         console.log(err);
         setLoading(false);
         setErrorState(true);
@@ -265,9 +272,9 @@ export default function Reports(props) {
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content" className="position-relaive">
             <Navbar user={loggedInUser}/>
-            { loading ?
+            { loading && !errorState ?
               <div className="slide-progress-bar">
-                <div className="progress-bar" id="progress-bar"></div>
+                <div className="progress-bar" ref={progressRef} id="progress-bar"></div>
               </div> : null
             }
 
@@ -280,7 +287,7 @@ export default function Reports(props) {
               </div>
               :null
               }
-              { loading ?  <h3 style={{display:"none"}}>Loading....</h3> : errorState ? <h3>Something went wrong. Please try again</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} durationData={selectedDuration} /> : null
+              { loading && !errorState ?  <ShimmerTable row={10} col={6} /> : errorState ? <h3>Something went wrong. Please try again</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} durationData={selectedDuration} /> : null
               }
             </div>
           </div>

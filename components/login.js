@@ -60,6 +60,7 @@ export default function Login(){
 
 	return(
 		<>
+
 	        <div className="row justify-content-center align-items-center vh-100">
 	            <div className="col-xl-10 col-lg-12 col-md-9">
 	                <div className="card o-hidden border-0 shadow-lg my-5">

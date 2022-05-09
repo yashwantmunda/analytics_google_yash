@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import {  warningToast } from './utils/notification';
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
+import {ShimmerTable} from 'react-shimmer-effects';
 
 export default function ClientSelector({getReportData}){
     
@@ -160,7 +161,7 @@ export default function ClientSelector({getReportData}){
 
     return(
         
-            clientList.length > 0 && 
+            clientList.length > 0 ?
         
         <>
         
@@ -227,6 +228,9 @@ export default function ClientSelector({getReportData}){
                 </form>
             </div>
         </>
+        :
+
+        <ShimmerTable row={1} col={4} />
     
     );
 };

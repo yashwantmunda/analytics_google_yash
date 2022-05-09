@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { ErrorBoundary } from 'react-error-boundary';
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import {ShimmerTable} from 'react-shimmer-effects';
 
 export default function AddCompany() {
 
@@ -36,6 +37,32 @@ const customStyles = {
 };
 
   useEffect(() => {
+
+    function modalOpen(){
+      document.querySelector("body").classList.add("modal-open");
+      document.querySelector(".modal").classList.add("show", "d-block");
+      document.querySelector(".back-bg").classList.add("show-back");
+    }
+
+    function modalClose(){
+      document.querySelector("body").classList.remove("modal-open");
+      document.querySelector(".modal").classList.remove("show", "d-block");
+      document.querySelector(".back-bg").classList.remove("show-back");
+    }
+
+    function backShow(){
+      document.querySelector("body").classList.remove("modal-open");
+        document.querySelector(".modal").classList.remove("show", "d-block");
+        document.querySelector(".back-bg").classList.remove("show-back");
+    }
+
+    //modal open
+    document.querySelector(".btn-open").addEventListener("click", modalOpen);
+    //modal close
+    document.querySelector(".btn-close").addEventListener("click", modalClose);
+
+    document.querySelector(".back-bg").addEventListener("click", backShow);
+
     let authToken = localStorage.getItem('token');
   
       const requestOptions = {
@@ -59,6 +86,12 @@ const customStyles = {
         console.log(error.response);
   
       })
+
+      // return () => {
+      //   document.querySelector(".btn-open").removeEventListener("click",modalOpen);
+      //   document.querySelector(".btn-close").removeEventListener("click",modalClose);
+      //   document.querySelector(".back-bg").removeEventListener("click",backShow);
+      // }
     
   },[])
 
@@ -86,6 +119,9 @@ const customStyles = {
         return;
       }
       setCompany([newClient,...company]);
+      document.querySelector("body").classList.remove("modal-open");
+      document.querySelector(".modal").classList.remove("show", "d-block");
+      document.querySelector(".back-bg").classList.remove("show-back");
       successToast('Client added successfully 🔥');
     })
     .catch(error => {
@@ -164,7 +200,7 @@ const customStyles = {
   return (
     <>
     {/*<ToastContainer />*/}
-      <h1 className="h3 mb-3 text-gray-800">Add New Client</h1>
+      {/* <h1 className="h3 mb-3 text-gray-800">Add New Client</h1>
       <div className="d-flex shadow mb-4 py-4 pl-2 pr-2">
         <form className="d-flex w-100">
           <div className="col-xl-3 col-md-3 position-relative">
@@ -193,15 +229,65 @@ const customStyles = {
           </div>
       
         </form>
-      </div>
+      </div> */}
 
-      <div className="mb-3 text-center or-divider"><span>Or</span></div>
+
+<button type="button" className="btn btn-primary float-end btn-open">Add Client</button>
+
+<div className="back-bg"></div>
+  
+<div className="modal fade" id="addClient">
+  <div className="modal-dialog">
+    <div className="modal-content">
+      <div className="modal-header py-1 pt-2 pb-2">
+        <h5 className="modal-title" id="exampleModalLabel">Add New Client</h5>
+        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div className="modal-body pr-1 pl-1">
+        <form className="w-100 position-relative">
+          <div className="col-xl-12 col-md-12 mb-4">
+              <input type="text" name="company" className="form-control" id="companyname" placeholder="Client Name" />
+          </div>
+          <div className="col-xl-12 col-md-12 mb-4">
+              <input type="text" name="clientId" className="form-control" id="viewid" placeholder="Google Analytics View Id" />
+          </div>
+          <div className="col-xl-12 col-md-12 mb-4">
+         
+              <Select 
+                  name="clientType" 
+                  components={makeAnimated} 
+                  id="industry-type" 
+                  instanceId="industry-type" 
+                  options={typeList}
+                  placeholder="Industry type"
+                  onChange={handleTypeSelection}
+                  styles={customStyles}
+                    />
+   
+          </div>
+          <div className="col-xl-12 col-md-12 mb-4">
+              <span className="field-error invalid-feedback w-50" id="all-fields"></span>
+              <button type="submit" className="btn btn-primary float-end" onClick={handleCompanyAddition}>Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+      <ErrorBoundary FallbackComponent={<>Error loading added client</>}>
+      {/* <div className="mb-3 text-center or-divider"><span>Or</span></div> */}
 
       <h1 className="h3 mb-3 text-gray-800">Select Client</h1>
-      <div className="d-flex shadow mb-4 p-4">
-        <ErrorBoundary FallbackComponent={<>Error loading added client</>}>
+      
+        
         {
-          company && company.length > 0 &&
+          company && company.length > 0 ?
+          <>
+          <div className="d-flex shadow mb-4 p-4">
           <div className="tableInnerWrapper table-responsive">
             <table className="table table-bordered table-sm bg-white mb-0" >
               <thead>
@@ -227,9 +313,15 @@ const customStyles = {
               </tbody>
             </table>
           </div>
+          </div>
+          </>
+          :
+          null
         }
-        </ErrorBoundary>
-      </div>
+        
+      
+      { !company || company.length == 0 ? <ShimmerTable row={3} col={3} /> : null}
+      </ErrorBoundary>
     </>
   );
 };
