@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { successToast, warningToast, errorToast } from './utils/notification';
+import { ToastContainer } from 'react-toastify';
+import Loader from './utils/loader';
 import { useRouter } from 'next/router';
 import { ErrorBoundary } from 'react-error-boundary';
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import {ShimmerTable} from 'react-shimmer-effects';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function AddCompany() {
 
@@ -14,9 +17,10 @@ export default function AddCompany() {
   ];
 
 const [company, setCompany] = useState([]);
-
+const typeRef = useRef(null);
 const router = useRouter();
 const [clientType, setClientType] = useState('');
+const [loader, setLoader] = useState(false);
 
 const customStyles = {
   placeholder: (styles) => {
@@ -97,6 +101,7 @@ const customStyles = {
 
 
   const addClients = (clientName, clientId) => {
+    setLoader(true);
     let authToken = localStorage.getItem('token');
     let newClient = {
         clientName: clientName,
@@ -118,15 +123,17 @@ const customStyles = {
         router.push('/login');
         return;
       }
+      setLoader(false);
       setCompany([newClient,...company]);
       document.querySelector("body").classList.remove("modal-open");
       document.querySelector(".modal").classList.remove("show", "d-block");
       document.querySelector(".back-bg").classList.remove("show-back");
+      document.getElementById('companyname').value = '';
+      document.getElementById('viewid').value = '';
       successToast('Client added successfully 🔥');
     })
     .catch(error => {
-    
-      errorToast('Error adding client 😱');
+      setLoader(false);
     
     })
   }
@@ -148,6 +155,7 @@ const customStyles = {
   }
 
   const handleClientdelete = (id, clientName) => {
+    setLoader(true);
     let authToken = localStorage.getItem('token');
     let newClient = {
         clientName: clientName,
@@ -168,12 +176,14 @@ const customStyles = {
         router.push('/login');
         return;
       }
+      setLoader(false);
       let updatedCompany =  company.filter(item =>  item._id !== id);
       setCompany([...updatedCompany]);
+      
       successToast('Client removed successfully');
     })
     .catch(error => {
-    
+      setLoader(false);
       errorToast('Error deleting client 😱');
     
     })
@@ -199,7 +209,8 @@ const customStyles = {
 
   return (
     <>
-    {/*<ToastContainer />*/}
+    <ToastContainer />
+  { loader && <Loader /> }  
       {/* <h1 className="h3 mb-3 text-gray-800">Add New Client</h1>
       <div className="d-flex shadow mb-4 py-4 pl-2 pr-2">
         <form className="d-flex w-100">
@@ -249,11 +260,12 @@ const customStyles = {
               <input type="text" name="company" className="form-control" id="companyname" placeholder="Client Name" />
           </div>
           <div className="col-xl-12 col-md-12 mb-4">
-              <input type="text" name="clientId" className="form-control" id="viewid" placeholder="Google Analytics View Id" />
+              <input type="number"  onWheel={(e) => e.target.blur()} name="clientId" className="form-control" id="viewid" placeholder="Google Analytics View Id" />
           </div>
           <div className="col-xl-12 col-md-12 mb-4">
          
               <Select 
+                  ref={typeRef}
                   name="clientType" 
                   components={makeAnimated} 
                   id="industry-type" 

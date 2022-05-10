@@ -78,6 +78,7 @@ export default function Reports({reportData,client,durationData}){
             </div>
 			{
 				reportData.map((item,i) => (
+				Object.keys(item).length > 0 &&
 				<div key={`${item.key}${i}`} className="tableWrapper mb-5">
 					<h2 className="bg-success">{item.title}</h2>
 					<div className="tableInnerWrapper table-responsive">
@@ -86,12 +87,12 @@ export default function Reports({reportData,client,durationData}){
 								<tr className="first-head bg-success" style={{"display":"none"}}>
 									<th scope="col" colSpan="100%" className="fw-bold mb-0 text-white">{item.title}</th>
 								</tr>
-								<tr className="tr-blank"><td colSpan="100%">
+								{/* <tr className="tr-blank"><td colSpan="100%">
 								{item.units ? item.units : ''}
-								</td></tr>
+								</td></tr> */}
 								<tr>
 									{
-										item.header.map((subitem,i) => (
+									 item.header.map((subitem,i) => (
 											
 											<th scope="col" key={i} title={subitem}>
 												{subitem}

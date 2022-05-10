@@ -19,6 +19,8 @@ export default function ClientSelector({getReportData}){
       { value: '180daysAgo', label: '6 Months' }
     ];
 
+
+
     var clientData = {};
     const router = useRouter();
     const queryData = router.query;
@@ -62,16 +64,45 @@ export default function ClientSelector({getReportData}){
     const [durationLabel, setDurationLabel] = useState('');
     const [clientType, setClientType] = useState('');
     const [clientObject, setClientObject] = useState({});
-    
-
+    const [customreport, selectCustomReport] = useState(false);
+    const [reportAttribute, setReportAttribute] = useState([]);
+    const [showFilters, setShowFilters] = useState(false);
     // let getReport=(e) =>{
     //     e.preventDefault();
     // }
 
+    const handleCustomAttribute = (e) => {
+        if(e.target.checked){
+            setReportAttribute([...reportAttribute, e.target.value]);
+        }
+        else{
+            let filterAttribute = reportAttribute.filter(item => item !== e.target.value);
+            setReportAttribute(filterAttribute);
+        }
+
+        console.log('attr',reportAttribute);
+        
+    }
+
+    const hidefilter = () => {
+        if(reportAttribute.length === 0){
+            selectCustomReport(false); 
+        }
+        setShowFilters(false);
+    }
+
+    const handleCustomReport = (e) => {
+        // if(!e.target.checked){
+        //     setReportAttribute([]);
+        // }
+        setShowFilters(true);
+    }
 
 
     const handleClientSelection = (selectedClient) => {
-        console.log('selectedClient', selectedClient);
+
+        setReportAttribute([]);
+        
         setClient(selectedClient.value);
         setClientName(selectedClient.label);
         if(selectedClient.type == 'ecommerce'){
@@ -103,7 +134,7 @@ export default function ClientSelector({getReportData}){
         }
         document.getElementById('all-fields').textContent='';
         document.getElementById('all-fields').style.display='none';
-        getReportData(clientName,duration,client,clientType,durationLabel);
+        getReportData(clientName,duration,client,clientType,durationLabel,reportAttribute);
     }
 
  
@@ -165,9 +196,9 @@ export default function ClientSelector({getReportData}){
         
         <>
         
-            <div className="row">
+            <div className="row mb-5">
                 <form className="d-flex p-0">    
-                    <div className="col-xl-3 col-md-6 mb-5">
+                    <div className="col-xl-3 col-md-6">
                         <div className="w-100 position-relative">
                             {
                                 clientData.label ?
@@ -202,7 +233,7 @@ export default function ClientSelector({getReportData}){
                             <span className="field-error invalid-feedback" id="all-fields"></span>    
                         </div>
                     </div>
-                    <div className="col-xl-3 col-md-6 mb-5">
+                    <div className="col-xl-3 col-md-6">
                         <div className="w-100">
                             <Select 
                                 name="duration" 
@@ -218,14 +249,293 @@ export default function ClientSelector({getReportData}){
                         </div>
                     </div>
 
-                    <div className="col-xl-3 col-md-6 mb-5">
+                    <div className="col-xl-2 col-md-6">
                         <input type="text" name="clientType" disabled  value={clientType ? clientType : clientData.type} placeholder="Industry type" className="form-control" id="clientType" />
                     </div>
 
-                    <div className="col-xl-3 col-md-6 mb-4">
+                    <div className="col-xl-2 col-md-6">
                         <button className="btn btn-md btn-primary" onClick={handleFetchReport}>Get Report</button>
                     </div>
+
+                    {
+                        clientType !== '' && 
+                        <label htmlFor="customReport" style={{"cursor":"pointer", "display":"flex","height":"min-content","marginBottom":"0"}}>
+                            <img src="/filter_icon.svg" alt="filterIcon" style={{"width": "20px","marginRight":"12px"}}/>
+                            <input type="checkbox" id="customReport" name="selectCustomReport" onChange={handleCustomReport} hidden/>
+                                <span style={{ "color": `${reportAttribute.length > 0 ? '#4e73df' : '#333'}`}}>Custom report</span>
+                                
+                        </label>
+                    }
+
+
                 </form>
+            </div>
+
+            <div className="parentOptionWrapper">
+                
+                <div className="optionWrapper">
+                {
+                    clientType === 'Ecommerce' && 
+                    <div className="customChoise_wrapper" style={{"display":`${clientType === 'Ecommerce' && showFilters ? 'flex' : 'none'}`}}>
+                        <label htmlFor="benchmarks_ecom">
+                        <input type="checkbox" id="benchmarks_ecom" value="benchmarks" name="benchmarks" onChange={handleCustomAttribute} />
+                        <span className="text">Benchmarks</span>
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="userdata_ecom">
+                        <input type="checkbox" id="userdata_ecom" value="userdata" name="userdata" onChange={handleCustomAttribute}/>
+                        <span className="text">Overall User </span>
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="device_based_ecom">
+                        <input type="checkbox" id="device_based_ecom" value="device_based" name="device_based" onChange={handleCustomAttribute}/>
+                        <span className="text">Device - Operating system</span>
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="newvsreturn_ecom">
+                        <input type="checkbox" id="newvsreturn_ecom" value="newvsreturn" name="newvsreturn" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                        New v/s Returning user 
+                        </span>    
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="mobile_site_speed_ecom">
+                        <input type="checkbox" id="mobile_site_speed_ecom" value="mobile_site_speed" name="mobile_site_speed" onChange={handleCustomAttribute}/>
+                        <span className="text">
+
+                        Pages Summary (site speed) vs Device Category (Mobile)
+                        </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="desktop_site_speed_ecom">
+                        <input type="checkbox" id="desktop_site_speed_ecom" value="desktop_site_speed" name="desktop_site_speed" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                            
+                        Pages Summary (site speed) vs Device Category (Desktop)
+                        </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="page_load_time_slow_ecom">
+                        <input type="checkbox" id="page_load_time_slow_ecom" value="page_load_time_slow" name="page_load_time_slow" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                            
+                        Top 10 Highest Page Load Times (slowest pages)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="acquisition_ecom">
+                        <input type="checkbox" id="acquisition_ecom" value="acquisition" name="acquisition" onChange={handleCustomAttribute}/>
+                        <span className="text">Acquisition based on source/medium</span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="homepage_traffic_ecom">
+                        <input type="checkbox" id="homepage_traffic_ecom" value="homepage_traffic" name="homepage_traffic" onChange={handleCustomAttribute}/>
+                        <span className="text">Homepage Traffic Acquisition Report by Source/Medium</span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="top_ten_pages_traffic_mobile_ecom">
+                        <input type="checkbox" id="top_ten_pages_traffic_mobile_ecom" value="top_ten_pages_traffic_mobile" name="top_ten_pages_traffic_mobile" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                            
+                        Top 10 Pages by Traffic(Mobile)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="top_ten_pages_traffic_desktop_ecom">
+                        <input type="checkbox" id="top_ten_pages_traffic_desktop_ecom" value="top_ten_pages_traffic_desktop" name="top_ten_pages_traffic_desktop" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                            
+                        Top 10 Pages by Traffic(Desktop)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="top_ten_pages_by_revenue_ecom">
+                        <input type="checkbox" id="top_ten_pages_by_revenue_ecom" value="top_ten_pages_by_revenue" name="top_ten_pages_by_revenue" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                            
+                        Top 10 Pages by Revenue
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="most_visted_pages_ecom">
+                        <input type="checkbox" id="most_visted_pages_ecom" value="most_visted_pages" name="most_visted_pages" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                            
+                        Top 10 most visited pages and their page speeds
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="audience_engagment_report_ecom">
+                        <input type="checkbox" id="audience_engagment_report_ecom" value="audience_engagment_report" name="audience_engagment_report" onChange={handleCustomAttribute}/>
+                        <span className="text">
+                            
+                        Audience Engagement Report
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <button className="btn btn-md btn-success" style={{"height":"max-content","margin":"4px","fontSsize":"0.95rem"}} onClick={hidefilter}>Save</button>
+
+                    </div>
+
+                    }
+                    {
+                    clientType === 'Non-Ecommerce' && 
+                    <div className="customChoise_wrapper" style={{"display":`${clientType === 'Non-Ecommerce' && showFilters ? 'flex' : 'none'}`}}>
+                    <label htmlFor="benchmarks">
+                        <input type="checkbox" id="benchmarks" value="benchmarks" name="benchmarks" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Benchmarks
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="userdata">
+                        <input type="checkbox" id="userdata" value="userdata" name="userdata" onChange={handleCustomAttribute} />
+                        <span className="text">
+                        Overall User 
+                            
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="device_based">
+                        <input type="checkbox" id="device_based" value="device_based" name="device_based" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Device - Operating system
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="newvsreturn">
+                        <input type="checkbox" id="newvsreturn" value="newvsreturn" name="newvsreturn" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        New v/s Returning user 
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="mobile_site_speed">
+                        <input type="checkbox" id="mobile_site_speed" value="mobile_site_speed" name="mobile_site_speed" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Pages Summary (site speed) vs Device Category (Mobile)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="desktop_site_speed">
+                        <input type="checkbox" id="desktop_site_speed" value="desktop_site_speed" name="desktop_site_speed" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Pages Summary (site speed) vs Device Category (Desktop)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="page_load_time_slow">
+                        <input type="checkbox" id="page_load_time_slow" value="page_load_time_slow" name="page_load_time_slow" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Top 10 Highest Page Load Times (slowest pages)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="acquisition">
+                        <input type="checkbox" id="acquisition" value="acquisition" name="acquisition" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Acquisition based on source/medium
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="homepage_traffic">
+                        <input type="checkbox" id="homepage_traffic" value="homepage_traffic" name="homepage_traffic" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Homepage Traffic Acquisition Report by Source/Medium
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="top_ten_pages_traffic_mobile">
+                        <input type="checkbox" id="top_ten_pages_traffic_mobile" value="top_ten_pages_traffic_mobile" name="top_ten_pages_traffic_mobile" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Top 10 Pages by Traffic(Mobile)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                    <label htmlFor="top_ten_pages_traffic_desktop">
+                        <input type="checkbox" id="top_ten_pages_traffic_desktop" value="top_ten_pages_traffic_desktop" name="top_ten_pages_traffic_desktop" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Top 10 Pages by Traffic(Desktop)
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    
+
+                    <label htmlFor="most_visted_pages">
+                        <input type="checkbox" id="most_visted_pages" value="most_visted_pages" name="most_visted_pages" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Top 10 most visited pages and their page speeds
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+
+                    <label htmlFor="audience_engagment_report">
+                        <input type="checkbox" id="audience_engagment_report" value="audience_engagment_report" name="audience_engagment_report" onChange={handleCustomAttribute} />
+                        <span className="text">
+                            
+                        Audience Engagement Report
+                            </span>
+
+                        <span className="overlay"></span>
+                    </label>
+                        <label htmlFor="user_traffic_geographically">
+                            <input type="checkbox" id="user_traffic_geographically" value="user_traffic_geographically" name="user_traffic_geographically" onChange={handleCustomAttribute} />
+                            <span className="text">
+                            
+                            Geographic User Traffic
+                            </span>
+
+                            <span className="overlay"></span>
+                        </label>
+                        <button className="btn btn-md btn-success" style={{"height":"max-content","margin":"4px","fontSsize":"0.95rem"}} onClick={hidefilter}>Save</button>
+                    </div>
+                    
+                }
+
+                
+               </div>     
             </div>
         </>
         :

@@ -2,16 +2,17 @@ import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
 import Report from "../components/reports";
 import ClientSelector from "../components/clientSelector";
-import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+
 import { useState, useRef, useEffect } from "react";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 import Image from "next/image";
 import { ShimmerTable } from "react-shimmer-effects";
 
 
 
 export default function Reports(props) {
+  const routerNew = useRouter();
+  const queryData = routerNew.query;
 
   const [loggedInUser, setLoggedInUser] = useState('');
   const [tokenCheck, setTokenCheck] = useState(false);
@@ -28,6 +29,11 @@ export default function Reports(props) {
 
       setTokenCheck(true);
       setLoggedInUser(user);
+      if(queryData.clientId && queryData.clientLabel && queryData.clientType){
+        
+        getReport(queryData.clientLabel,"30daysAgo",queryData.clientId, queryData.clientType === 'ecommerce' ? "Ecommerce" : "Non-ecommerce", "1 Month");
+      }
+      
       //setSelectedClient(clientData.clientLabel);
     }
   },[router]);
@@ -43,18 +49,18 @@ export default function Reports(props) {
 
   const toastRef = useRef(null);
 
-  const getReport = (client, dateRange, viewId, type,durationLabel) => {
+  const getReport = (client, dateRange, viewId, type,durationLabel,reportAttribute=[]) => {
     let authToken = localStorage.getItem('token');
     // progressRef.current.classList.remove('complete');
     // document.querySelector('.progress-bar').classList.remove('complete');
-    const activeToast = () => toastRef.current = toast.loading("Fetching report...",{autoClose:false});
-    activeToast();
+    // const activeToast = () => toastRef.current = toast.loading("Fetching report...",{autoClose:false});
+    // activeToast();
     setLoading(true);
     setErrorState(false);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X_auth_token': authToken },
-      body: JSON.stringify({ client, dateRange, viewId, type})
+      body: JSON.stringify({ client, dateRange, viewId, type,reportAttribute})
     };
     fetch('/api/fetchReport', requestOptions)
       .then(response => response.json())
@@ -67,8 +73,9 @@ export default function Reports(props) {
         }
         progressRef.current.classList.add('complete');
         // document.querySelector('.progress-bar').classList.add('complete');
-        let updatingToast = () => toast.update(toastRef.current,{render :'Preparing report...', type: "info", isLoading: false, closeOnClick: true,progress: undefined,autoClose: false});
-        updatingToast();
+        // let updatingToast = () => toast.update(toastRef.current,{render :'Preparing report...', type: "info", isLoading: false, closeOnClick: true,progress: undefined,autoClose: false});
+        // updatingToast();
+  
         let sessionObject = {};
         let userObject = {};
 
@@ -243,9 +250,12 @@ export default function Reports(props) {
         setLoading(false);
         setErrorState(false);
 
-        let completingToast = () => toast.update(toastRef.current,{render :'Report is ready 🔥', type: "success", autoClose: 3000, isLoading: false, closeOnClick: true,progress: undefined});
-        completingToast();
-        setgaData([{...sessionObject},{...userObject},{...sameOsObject},{...visitorsObject},...filteredData]);
+        // let completingToast = () => toast.update(toastRef.current,{render :'Report is ready 🔥', type: "success", autoClose: 3000, isLoading: false, closeOnClick: true,progress: undefined});
+        // completingToast();
+        
+          setgaData([{...sessionObject},{...userObject},{...sameOsObject},{...visitorsObject},...filteredData]);
+
+        
         setSelectedClient(client);
         setSelectedDuration(durationLabel);
       }).catch(err => {
@@ -254,8 +264,8 @@ export default function Reports(props) {
         console.log(err);
         setLoading(false);
         setErrorState(true);
-        let errorReportToast = () =>  toast.update(toastRef.current,{render :'Something went wrong', type: "error", autoClose: 3000,isLoading: false,closeOnClick: true,progress: undefined});
-        errorReportToast();
+        // let errorReportToast = () =>  toast.update(toastRef.current,{render :'Something went wrong', type: "error", autoClose: 3000,isLoading: false,closeOnClick: true,progress: undefined});
+        // errorReportToast();
       });
     
     // setgaData([...reportData]);
@@ -287,7 +297,7 @@ export default function Reports(props) {
               </div>
               :null
               }
-              { loading && !errorState ?  <ShimmerTable row={10} col={6} /> : errorState ? <h3>Something went wrong. Please try again</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} durationData={selectedDuration} /> : null
+              { loading && !errorState ?  <ShimmerTable row={10} col={6} /> : errorState ? <h3>Oops! Looks like you have entered incorrect view ID for the client {selectedClient || queryData.clientLabel}</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} durationData={selectedDuration} /> : null
               }
             </div>
           </div>

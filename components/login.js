@@ -72,7 +72,7 @@ export default function Login(){
 	                                    	<div className="login-img">
 	                                    		<img src="/images/logo.png" alt="DataSensei" />
 	                                    	</div>
-	                                        <h1 className="h4 text-gray-900 mb-4">Login</h1>
+	                                        {/* <h1 className="h4 text-gray-900 mb-4">Login</h1> */}
 	                                    </div>
 	                                    <form className="user">
 	                                        <div className="form-group">
