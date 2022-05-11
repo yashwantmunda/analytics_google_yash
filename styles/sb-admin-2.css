@@ -1515,7 +1515,8 @@ pre code {
 .table {
   width: 100%;
   margin-bottom: 1rem;
-  color: #858796;
+  color: #565656;
+  font-size:0.9rem;
 }
 
 .table th,
@@ -11324,8 +11325,8 @@ tr td{
 }
 .tableWrapper h2{
   color:#fff;
-  font-size: 1.5rem;
-  font-weight:bold;
+  font-size: 1.2rem;
+  font-weight:400;
   padding:7px 8px;
   margin-bottom:0;
 }

@@ -116,8 +116,8 @@ export default function Reports({reportData,client,durationData}){
 									))
 								}
 								
-							{/* <tr className="d-none tr-blank"><td colSpan="100%"></td></tr>
-							<tr className="d-none tr-blank"><td colSpan="100%"></td></tr> */}
+							<tr className="d-none tr-blank"><td colSpan="100%"></td></tr>
+							<tr className="d-none tr-blank"><td colSpan="100%"></td></tr>
 							</tbody>
 						</table>
 					</div>
