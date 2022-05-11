@@ -213,7 +213,7 @@ const customStyles = {
 
   return (
     <>
-    <ToastContainer />
+    <ToastContainer style={{ fontFamily: "proxima nova" }} />
   { loader && <Loader /> }  
       {/* <h1 className="h3 mb-3 text-gray-800">Add New Client</h1>
       <div className="d-flex shadow mb-4 py-4 pl-2 pr-2">
