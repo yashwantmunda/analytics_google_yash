@@ -301,7 +301,7 @@ export default function Reports(props) {
               <div className="text-center">
                 
                 <h3>
-                Oops! Looks like you have entered incorrect view ID for the client {selectedClient || queryData.clientLabel}
+                Oops! Looks like you have entered incorrect view ID for the client {queryData.clientLabel || selectedClient }
                 </h3>
                 <Image src="/error.png" width="400" height="300" alt="Error" />
               </div>

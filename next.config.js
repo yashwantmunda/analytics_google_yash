@@ -18,12 +18,12 @@ module.exports = {
       },
         {
             source: '/api/getClient',
-            // destination: 'http://localhost:4000/getClient'
+            //destination: 'http://localhost:4000/getClient'
             destination: 'https://hackathon-houndstooth.herokuapp.com/getClient' // Proxy to Backend
         },
         {
             source: '/api/login',
-            // destination: 'http://localhost:4000/login'
+           // destination: 'http://localhost:4000/login'
             destination: 'https://hackathon-houndstooth.herokuapp.com/login' // Proxy to Backend
         }
       ]

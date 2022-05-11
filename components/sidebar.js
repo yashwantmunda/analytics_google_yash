@@ -18,12 +18,12 @@ export default function Sidebar(){
                     </a>
                 </Link>
                 
-                <hr className="sidebar-divider my-0" />
+                <hr className="sidebar-divider my-0 mb-2" />
                     
                 <li className="nav-item">
                     <Link href="/">
                         <a className="nav-link text-white">
-                            <i className="fas fa-fw fa-tachometer-alt"></i>
+                            {/* <i className="fas fa-fw fa-tachometer-alt"></i> */}
                             <span>Dashboard</span>
                         </a>
                     </Link>
@@ -35,7 +35,7 @@ export default function Sidebar(){
                     <Link href="/addclient" className="nav-item">
                         <a className="nav-link text-white">
                             {/*<i className="fas fa-fw fa-building"></i>*/}
-                            <img src="/images/layer.png" alt="Client" />
+                            {/* <img src="/images/layer.png" alt="Client" /> */}
                             <span>Client</span>
                         </a>
                     </Link>
