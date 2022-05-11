@@ -39,7 +39,7 @@ export default function ClientSelector({getReportData}){
         placeholder: (styles) => {
             return {
                 ...styles,
-                color: "#000000",
+                color: "#000",
             }
         },
         option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -50,7 +50,11 @@ export default function ClientSelector({getReportData}){
                 backgroundColor: isFocused ? "#eaecf4" : null,
                 color: "#000000"
             };
-        }
+        },
+        control: (base, state) => ({
+            ...base,
+            border: "1px solid #9B9B9B"
+        })
     };
 
     const typeList = [
@@ -197,8 +201,8 @@ export default function ClientSelector({getReportData}){
         <>
         
             <div className="row mb-5">
-                <form className="d-flex p-0">    
-                    <div className="col-xl-3 col-md-6">
+                <form className="d-flex p-0 align-items-center">    
+                    <div className="col-xl-3 col-md-3">
                         <div className="w-100 position-relative">
                             {
                                 clientData.label ?
@@ -233,7 +237,7 @@ export default function ClientSelector({getReportData}){
                             <span className="field-error invalid-feedback" id="all-fields"></span>    
                         </div>
                     </div>
-                    <div className="col-xl-3 col-md-6">
+                    <div className="col-xl-3 col-md-3">
                         <div className="w-100">
                             <Select 
                                 name="duration" 
@@ -249,11 +253,11 @@ export default function ClientSelector({getReportData}){
                         </div>
                     </div>
 
-                    <div className="col-xl-2 col-md-6">
+                    <div className="col-xl-2 col-md-2">
                         <input type="text" name="clientType" disabled  value={clientType ? clientType : clientData.type} placeholder="Industry type" className="form-control" id="clientType" />
                     </div>
 
-                    <div className="col-xl-2 col-md-6">
+                    <div className="col-xl-2 col-md-2">
                         <button className="btn btn-md btn-primary" onClick={handleFetchReport}>Get Report</button>
                     </div>
 

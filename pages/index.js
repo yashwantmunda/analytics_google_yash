@@ -293,11 +293,19 @@ export default function Reports(props) {
               <ClientSelector getReportData={getReport}/>
               { gaData.length == 0 && !loading && !errorState ? 
               <div className="placeholderWrap">
-                <Image src="/images/data_extract.png" width={650} height={350} layout="fixed" alt="placehlder_img"/>
+                <Image src="/data_analytics_new.gif" width={600} height={450} layout="fixed" alt="placehlder_img"/>
               </div>
               :null
               }
-              { loading && !errorState ?  <ShimmerTable row={10} col={6} /> : errorState ? <h3>Oops! Looks like you have entered incorrect view ID for the client {selectedClient || queryData.clientLabel}</h3> : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} durationData={selectedDuration} /> : null
+              { loading && !errorState ?  <ShimmerTable row={10} col={6} /> : errorState ? 
+              <div className="text-center">
+                
+                <h3>
+                Oops! Looks like you have entered incorrect view ID for the client {selectedClient || queryData.clientLabel}
+                </h3>
+                <Image src="/error.png" width="400" height="300" alt="Error" />
+              </div>
+               : (!loading && !errorState && gaData.length > 0) ? <Report reportData={gaData} client={selectedClient} durationData={selectedDuration} /> : null
               }
             </div>
           </div>

@@ -26,7 +26,7 @@ const customStyles = {
   placeholder: (styles) => {
       return {
           ...styles,
-          color: "#000000",
+          color: "#999",
       }
   },
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -37,7 +37,11 @@ const customStyles = {
           backgroundColor: isFocused ? "#eaecf4" : null,
           color: "#000000"
       };
-  }
+  },
+  control: (base, state) => ({
+      ...base,
+      border: "1px solid #9B9B9B"
+  })
 };
 
   useEffect(() => {
@@ -251,7 +255,8 @@ const customStyles = {
   <div className="modal-dialog">
     <div className="modal-content">
       <div className="modal-header py-1 pt-2 pb-2">
-        <h5 className="modal-title" id="exampleModalLabel">Add New Client</h5>
+
+        <h1 className="modal-title h3 text-gray-800" id="exampleModalLabel">Add New Client</h1>
         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div className="modal-body pr-1 pl-1">

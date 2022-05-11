@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Image from "next/image";
 import React, {useEffect, useState} from "react";
 import { useRouter } from "next/router";
 
@@ -10,13 +10,17 @@ export default function Login(){
 	const password_error="";
 	const history=useRouter();
 
+	const [loginLoader, setLoginLoader] = useState(false);
+
 
 	async function signin(e){
         e.preventDefault();
+		setLoginLoader(true);
 		//console.warn(email, password);	
 		//email check
 		var email_regex = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 		if(email.length<1 || !email_regex.test(email)){
+			setLoginLoader(false);
 			document.getElementById("emailerror").style.display="block";
 		}else{
 			document.getElementById("emailerror").style.display="none";
@@ -24,10 +28,13 @@ export default function Login(){
 
 		//password check
 		if(password.length<1){
+			setLoginLoader(false);
 			document.getElementById("passworderror").style.display="block";
 		}else if(password.length>1 && password.length<8){
+			setLoginLoader(false);
 			document.getElementById("passworderror").style.display="block";
 		}else{
+
 			document.getElementById("passworderror").style.display="none";
 		}
 
@@ -44,15 +51,18 @@ export default function Login(){
 			let result=await response.json();
 			
 			if(result.status==="Error"){
+				setLoginLoader(false);
 				document.getElementById("passworderror").textContent = "Invalid email or password";
 				document.getElementById("passworderror").style.display="block";
 				return false;
 			}
 			else{
+				
 				localStorage.clear();		
 				localStorage.setItem("user", result.user);
 				localStorage.setItem("token", result.token);
 				history.replace("/");
+				setLoginLoader(false);
 			}
 			
 		}
@@ -93,9 +103,19 @@ export default function Login(){
 		                                            onChange={(e)=>setPassword(e.target.value)}/>
 		                                        <div id="passworderror" className="invalid-feedback">Invalid Password</div>
 	                                        </div>
+											
 	                                        <button 
-	                                        	className="btn btn-primary btn-user btn-block"
-	                                        	onClick={signin}>Login</button>
+	                                        	className="btn btn-primary btn-user btn-block d-flex align-items-center justify-content-center"
+	                                        	onClick={signin}>
+													{
+														loginLoader ? 
+														<Image src="/loader_new.gif" width="20" height="20" alt="loader" className="loading" />
+														:
+														<span className="pr-2">Login</span>
+													}
+													
+													
+											</button>
 	                                    </form>
 	                                </div>
 	                            </div>

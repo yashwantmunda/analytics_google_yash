@@ -20,9 +20,9 @@ export default function Sidebar(){
                 
                 <hr className="sidebar-divider my-0" />
                     
-                <li className={router.pathname == "/" ? "nav-item active" : "nav-item"}>
+                <li className="nav-item">
                     <Link href="/">
-                        <a className="nav-link">
+                        <a className="nav-link text-white">
                             <i className="fas fa-fw fa-tachometer-alt"></i>
                             <span>Dashboard</span>
                         </a>
@@ -31,9 +31,9 @@ export default function Sidebar(){
             
                 {/*<hr className="sidebar-divider mx-3"/>*/}
                 
-                <li className={router.pathname == "/addclient" ? "nav-item active" : "nav-item"}>
+                <li className="nav-item">
                     <Link href="/addclient" className="nav-item">
-                        <a className="nav-link">
+                        <a className="nav-link text-white">
                             {/*<i className="fas fa-fw fa-building"></i>*/}
                             <img src="/images/layer.png" alt="Client" />
                             <span>Client</span>
