@@ -2,6 +2,7 @@ import Sidebar from "../components/sidebar";
 import Navbar from "../components/navbar";
 import Report from "../components/reports";
 import ClientSelector from "../components/clientSelector";
+import Head from 'next/head';
 
 import { useState, useRef, useEffect } from "react";
 import router, { useRouter } from "next/router";
@@ -273,6 +274,9 @@ export default function Reports(props) {
 
   return (
     <>
+    <Head>
+      <title>Data Sensei</title>
+    </Head>
     {
       tokenCheck && 
       <main>

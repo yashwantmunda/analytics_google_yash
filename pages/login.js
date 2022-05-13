@@ -1,4 +1,5 @@
 import Login from "../components/login";
+import Head from "next/head";
 
 import { useEffect } from "react";
 import { useRouter } from 'next/router';
@@ -17,10 +18,15 @@ export default function Log() {
     }
   },[router]);
   return (
+    <>
+    <Head>
+      <title>Data Sensei | login</title>
+    </Head>
     <main className="bg-gradient-primary" style={{"height":"100vh"}}>
       <div className="container">
         <Login />
       </div>
     </main>
+    </>
   );
 };

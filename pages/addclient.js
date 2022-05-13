@@ -3,7 +3,7 @@ import Navbar from "../components/navbar";
 import AddCompany from "../components/addCompany";
 import { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-
+import Head from "next/head";
 
 
 export default function Addcompany(props) {
@@ -25,6 +25,9 @@ export default function Addcompany(props) {
   },[router]);
   return (
     <>
+    <Head>
+      <title>Data Sensei | add client</title>
+    </Head>
     {
       tokenCheck && 
       <main>

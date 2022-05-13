@@ -129,15 +129,31 @@ export default function ClientSelector({getReportData}){
 
     const handleFetchReport = (e) => {
         e.preventDefault();
-        console.log('get',client,duration,clientType);
+      
         if(client === undefined || client.trim() === '' || duration.trim() === '' || clientType.trim() === ''){
             // warningToast('Please select all the fields 🎃');
-            document.getElementById('all-fields').textContent='Please select all the fields';
-            document.getElementById('all-fields').style.display='block';
+            if(client === undefined || client.trim() === ''){
+                document.getElementById('all-fields').textContent='Please select client';
+                document.getElementById('all-fields').style.display='block';
+            }
+            else{
+                document.getElementById('all-fields').textContent='';
+                document.getElementById('all-fields').style.display='none';
+            }
+            if(duration.trim() === ''){
+                document.getElementById('duration-error').textContent='Please select duration';
+                document.getElementById('duration-error').style.display='block';
+            }
+            else{
+                document.getElementById('duration-error').textContent='';
+                document.getElementById('duration-error').style.display='none'; 
+            }
             return;
         }
         document.getElementById('all-fields').textContent='';
         document.getElementById('all-fields').style.display='none';
+        document.getElementById('duration-error').textContent='';
+        document.getElementById('duration-error').style.display='none';
         getReportData(clientName,duration,client,clientType,durationLabel,reportAttribute);
     }
 
@@ -238,7 +254,7 @@ export default function ClientSelector({getReportData}){
                         </div>
                     </div>
                     <div className="col-xl-3 col-md-3">
-                        <div className="w-100">
+                        <div className="w-100 position-relative">
                             <Select 
                                 name="duration" 
                                 components={makeAnimated} 
@@ -250,6 +266,7 @@ export default function ClientSelector({getReportData}){
                                 styles={customStyles}
                                 defaultValue={clientData.value ? { value: '30daysAgo', label: '1 Month' } : {value : '', label: "Select Duration"}}
                                  />
+                            <span className="field-error invalid-feedback" id="duration-error"></span>  
                         </div>
                     </div>
 
