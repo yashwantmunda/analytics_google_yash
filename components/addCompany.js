@@ -298,7 +298,7 @@ const customStyles = {
       <ErrorBoundary FallbackComponent={<>Error loading added client</>}>
       {/* <div className="mb-3 text-center or-divider"><span>Or</span></div> */}
 
-      <h1 className="h3 mb-3 text-gray-800">Select Client</h1>
+      <h1 className="h3 mb-3 text-gray-800">Clients</h1>
       
         
         {
